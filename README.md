@@ -1,5 +1,8 @@
 # zipview
 
+> [!NOTE]
+> experiment for https://github.com/vitest-dev/vitest/issues/9971
+
 View any static site from a zip file — entirely in the browser, no server needed.
 
 A service worker intercepts fetch requests and serves files from the unzipped content via Cache API. The viewer is generic — it doesn't know or care what's inside the zip. Works with Vitest HTML reports, Storybook builds, Vitepress sites, or any static site.
