@@ -1,7 +1,7 @@
 ## TODO
 
-- [ ] chore: organize project structure
-  - agent docs
+- [x] chore: organize project structure
+  - added CLAUDE.md, AGENTS.md, .gitignore (following yt-dlp-ext pattern)
 - [ ] refactor: rework code
   - deduplicate fflate import (script tag on line 6 is dead weight, only the ES module import is needed)
   - share constants (CACHE_NAME, PREFIX) between index.html and sw.js instead of duplicating

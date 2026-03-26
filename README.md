@@ -10,7 +10,8 @@ A service worker intercepts fetch requests and serves files from the unzipped co
 ## Usage
 
 ```bash
-npx serve .
+pnpm i
+pnpm dev
 ```
 
 Then drag-and-drop a zip file onto the page. If the zip contains an `index.html`, it loads automatically. Otherwise, a directory listing is shown.

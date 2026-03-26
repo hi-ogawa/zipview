@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>zipview prototype</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      #drop {
+        padding: 3rem;
+        text-align: center;
+        border: 3px dashed #ccc;
+        margin: 1rem;
+        border-radius: 8px;
+        transition: border-color 0.2s;
+      }
+      #drop.over {
+        border-color: #646cff;
+      }
+      #status {
+        padding: 0 1rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+      iframe {
+        flex: 1;
+        border: none;
+        margin: 1rem;
+        border: 1px solid #eee;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="drop">Drop a zip file here</div>
+    <div id="status"></div>
+    <iframe id="viewer" hidden></iframe>
+
+    <script type="module">
+      import { unzipSync } from "https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js";
+
+      const CACHE_NAME = "zipview-v1";
+      const PREFIX = "/zipview/site/";
+      const $drop = document.getElementById("drop");
+      const $status = document.getElementById("status");
+      const $viewer = document.getElementById("viewer");
+
+      // Register SW
+      if ("serviceWorker" in navigator) {
+        await navigator.serviceWorker.register("./sw.js");
+        await navigator.serviceWorker.ready;
+        $status.textContent = "Service worker ready.";
+      } else {
+        $status.textContent = "Service workers not supported.";
+      }
+
+      // Drag and drop
+      $drop.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        $drop.classList.add("over");
+      });
+      $drop.addEventListener("dragleave", () => $drop.classList.remove("over"));
+      $drop.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        $drop.classList.remove("over");
+
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+
+        $status.textContent = `Unzipping ${file.name}...`;
+        const buf = await file.arrayBuffer();
+        const entries = unzipSync(new Uint8Array(buf));
+
+        // Clear old cache
+        await caches.delete(CACHE_NAME);
+        const cache = await caches.open(CACHE_NAME);
+
+        const mimeTypes = {
+          html: "text/html",
+          css: "text/css",
+          js: "application/javascript",
+          mjs: "application/javascript",
+          json: "application/json",
+          svg: "image/svg+xml",
+          png: "image/png",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          gif: "image/gif",
+          woff: "font/woff",
+          woff2: "font/woff2",
+          ico: "image/x-icon",
+        };
+
+        let fileCount = 0;
+        let rootPrefix = "";
+
+        // Detect common root directory in zip
+        const paths = Object.keys(entries);
+        if (paths.length > 0) {
+          const first = paths[0];
+          const slash = first.indexOf("/");
+          if (slash > 0) {
+            const candidate = first.substring(0, slash + 1);
+            if (paths.every((p) => p.startsWith(candidate))) {
+              rootPrefix = candidate;
+            }
+          }
+        }
+
+        for (const [path, data] of Object.entries(entries)) {
+          // Skip directories (empty data)
+          if (path.endsWith("/")) continue;
+
+          const ext = path.split(".").pop()?.toLowerCase() || "";
+          const contentType = mimeTypes[ext] || "application/octet-stream";
+
+          // Strip common root prefix so index.html is at the top level
+          const servePath = rootPrefix ? path.substring(rootPrefix.length) : path;
+          const url = new URL(PREFIX + servePath, location.origin);
+          const response = new Response(data, {
+            headers: { "Content-Type": contentType },
+          });
+          await cache.put(url.href, response);
+          fileCount++;
+        }
+
+        $status.textContent = `Cached ${fileCount} files. Loading...`;
+        $drop.hidden = true;
+        $viewer.hidden = false;
+        $viewer.src = PREFIX;
+      });
+    </script>
+  </body>
+</html>
