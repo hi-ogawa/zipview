@@ -10,6 +10,8 @@
   - consider async unzip for large zips (fflate has async `unzip`)
   - SW scope may break under subpath hosting
 - [ ] chore: deploy app
+  - https://developers.cloudflare.com/workers/static-assets/
+- [ ] chore: add example zip from vitest html artifact
 
 ## Backlog
 

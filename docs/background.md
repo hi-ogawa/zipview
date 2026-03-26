@@ -13,6 +13,7 @@ After `vitest --merge-reports --reporter=html` in CI, the HTML report is uploade
 ## Idea
 
 Host a static viewer page (e.g. `vitest.dev/report`) that lets users:
+
 1. Drag-and-drop the artifact zip onto the page
 2. Client-side JS unzips it and renders the report in-browser — no server needed
 
@@ -29,6 +30,7 @@ files from the unzipped blob, then loads the existing `index.html` from the arti
 However, the practical concern is the same as Playwright's: **version compatibility**.
 The deployed viewer/unpacker on `vitest.dev/report` would be from the latest release,
 but the artifact's SPA + data format could be from any older Vitest version. Options:
+
 - Use the SPA from inside the artifact itself (safest — no compat issues, viewer is just a shell)
 - Pin a stable data format for the JSON payload and keep the hosted SPA backward-compatible
 
@@ -63,6 +65,7 @@ via service worker. Could be a standalone tool (e.g. `zipview.dev`) that works f
 static site artifact: Vitest HTML reports, Storybook builds, Vitepress sites, etc.
 
 Vitest could either:
+
 1. Build a generic zip viewer and host it on `vitest.dev/report` with branding
 2. Use/create a standalone tool and just document it in the merge-reports guide
 3. Both — a generic library with a Vitest-branded instance
@@ -108,6 +111,7 @@ Host a static viewer page (e.g. `vitest.dev/report`) that lets users open an HTM
 Implementation: a service worker intercepts fetch requests and serves files from the unzipped artifact. Since the HTML report is already a self-contained static site (SPA + data), the viewer is just a thin "zip unpacker + virtual file server" shell. The actual rendering comes from the artifact's own `index.html`, so there are no version compatibility concerns between the hosted viewer and the report format.
 
 Prior art:
+
 - Playwright's trace viewer (`trace.playwright.dev`) uses this exact pattern — a service worker + `@zip.js/zip.js` to serve trace data from a zip URL
 - [`client-side-zip-server`](https://github.com/gkjohnson/client-side-zip-server) — generic SW-based zip serving
 
@@ -124,26 +128,31 @@ Tested with the `vitest-merge-reports` artifact containing `test/core/html` and 
 ## Follow-up ideas
 
 **UX polish**
+
 - File picker button (not just drag-and-drop) — mobile/accessibility
 - Persist last zip in IndexedDB so refresh doesn't lose state
 - Header bar showing zip name / file count, "Back to drop" button to load a different zip
 
 **URL-based loading**
+
 - `?url=` param for public URLs (pre-signed Azure blob URLs from GitHub, S3 buckets, etc.)
 - GitHub's signed artifact URLs expire in ~1 min, so impractical for PR comments without a proxy
 - Works well for self-hosted artifacts or public buckets
 
 **Multi-zip / tabbed view**
+
 - Drop multiple zips -> tabs (e.g. test/core and test/cli side by side)
 - Or: auto-detect multiple `html/` dirs in one artifact zip and show as tabs
 - Currently works via directory listing but tabs would be nicer
 
 **Standalone distribution**
+
 - Publish as tiny npm package (`npx zipview`) — starts local server with the two files
 - Host on `vitest.dev/report` (or a generic domain) for zero-install browser use
 - Could be a single self-contained HTML file if SW is inlined as blob URL (scope rules may complicate)
 
 **Self-bootstrapping HTML reporter** (most ambitious)
+
 - Embed zipview's SW directly in Vitest's HTML reporter output
 - The zip becomes self-bootstrapping: open zip, double-click index.html, it registers its own SW, reloads from cache
 - No external viewer needed at all

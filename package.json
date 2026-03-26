@@ -2,15 +2,14 @@
   "type": "module",
   "scripts": {
     "prepare": "vp config",
-    "dev": "serve src",
+    "dev": "wrangler dev",
+    "release": "wrangler deploy",
     "lint": "vp fmt",
     "lint-check": "vp fmt --check"
   },
   "dependencies": {
-    "serve": "^14.2.6"
-  },
-  "devDependencies": {
-    "vite-plus": "latest"
+    "vite-plus": "latest",
+    "wrangler": "^4.77.0"
   },
   "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }
