@@ -2,6 +2,9 @@
 
 - [x] chore: organize project structure
   - added CLAUDE.md, AGENTS.md, .gitignore (following yt-dlp-ext pattern)
+- [x] chore: deploy app
+  - https://developers.cloudflare.com/workers/static-assets/
+- [ ] chore: add example zip from vitest html artifact
 - [ ] refactor: rework code
   - deduplicate fflate import (script tag on line 6 is dead weight, only the ES module import is needed)
   - share constants (CACHE_NAME, PREFIX) between index.html and sw.js instead of duplicating
@@ -9,9 +12,6 @@
   - add try/catch around unzipSync for corrupt/non-zip files
   - consider async unzip for large zips (fflate has async `unzip`)
   - SW scope may break under subpath hosting
-- [ ] chore: deploy app
-  - https://developers.cloudflare.com/workers/static-assets/
-- [ ] chore: add example zip from vitest html artifact
 
 ## Backlog
 
