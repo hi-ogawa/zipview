@@ -90,10 +90,7 @@
       id="fetch-error"
       hidden
       style="text-align: center; font-size: 0.85rem; color: #c00; margin-top: 1rem"
-    >
-      Could not fetch <a id="fetch-error-link" href="" style="color: #646cff"></a> directly —
-      download it and drop the file here.
-    </div>
+    ></div>
     <iframe id="viewer" hidden></iframe>
 
     <script type="module">
@@ -131,20 +128,27 @@
         } catch (err) {
           const { hostname, pathname } = new URL(paramUrl);
           const lastSegment = pathname.split("/").filter(Boolean).pop() || "";
-          const filename = lastSegment ? `${hostname}/\u2026/${lastSegment}` : hostname;
+          const displayUrl = lastSegment ? `${hostname}/\u2026/${lastSegment}` : hostname;
+
           const $fetchError = document.getElementById("fetch-error");
-          const $fetchErrorLink = document.getElementById("fetch-error-link");
-          $fetchErrorLink.href = paramUrl;
-          $fetchErrorLink.textContent = filename;
+          const message =
+            err instanceof TypeError ? `${err.message} (likely blocked by CORS)` : err.message;
+          $fetchError.innerHTML = `
+            <div>${message}</div>
+            <div style="margin-top:0.3rem;color:#666">
+              Try opening <a href="${paramUrl}" style="color:#646cff">${displayUrl}</a> directly in your browser, download the file, and drop it here.
+            </div>`;
           $fetchError.hidden = false;
-          setStatus(`Fetch failed: ${err.message}`);
+          setStatus(`Fetch Error: ${message}`);
         }
       }
 
       async function handleUrl(url) {
         setStatus(`Fetching ${new URL(url).pathname.split("/").pop()}...`);
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
         const buf = await res.arrayBuffer();
         await handleBuffer(buf, url.split("/").pop());
       }
