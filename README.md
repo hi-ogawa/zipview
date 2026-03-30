@@ -1,11 +1,10 @@
-# zipview
-
-> [!NOTE]
-> experiment for https://github.com/vitest-dev/vitest/issues/9971
+# Vitest Viewer
 
 View any static site from a zip file — entirely in the browser, no server needed.
 
-A service worker intercepts fetch requests and serves files from the unzipped content via Cache API. The viewer is generic — it doesn't know or care what's inside the zip. Works with Vitest HTML reports, Storybook builds, Vitepress sites, or any static site.
+Available at [viewer.vitest.dev](https://viewer.vitest.dev/).
+
+A service worker intercepts fetch requests and serves files from the unzipped content via Cache API. The viewer is generic — it doesn't know or care what's inside the zip. Works with Vitest HTML reports, Storybook builds, VitePress sites, or any static site.
 
 ## Usage
 
@@ -23,13 +22,13 @@ Then drag-and-drop a zip file onto the page. If the zip contains an `index.html`
 ## How it works
 
 1. `index.html` — drop zone UI, unzips with [fflate](https://github.com/101arrowz/fflate) (CDN), stores files in Cache API, registers service worker, loads content in iframe
-2. `sw.js` — intercepts fetch under `/zipview/site/`, serves from Cache API, generates directory listings when no index.html is found
+2. `sw.js` — intercepts fetch under `/zipview/site/`, serves from Cache API, generates directory listings when no `index.html` is found
 
 That's it. Two files, no build step, no dependencies to install.
 
 ## Motivation
 
-CI produces static site artifacts (e.g. Vitest HTML reports via `--reporter=html`). On GitHub Actions, viewing them requires: download zip -> unzip -> run local static server -> open browser.
+CI produces static site artifacts (e.g. Vitest HTML reports via `--reporter=html`). On GitHub Actions, viewing them requires: download zip → unzip → run local static server → open browser.
 
 GitLab CI can [preview HTML artifacts directly in the browser](https://docs.gitlab.com/ee/ci/jobs/job_artifacts.html) (powered by GitLab Pages). GitHub Actions does not.
 

@@ -2,11 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Zipview</title>
-    <link
-      rel="icon"
-      href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y="80" font-size="80"%3E🤐%3C/text%3E%3C/svg%3E'
-    />
+    <title>Vitest Viewer</title>
+    <link rel="icon" href="https://vitest.dev/logo-without-border.svg" type="image/svg+xml" />
     <script type="module" src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js"></script>
     <style>
       * {
@@ -56,15 +53,25 @@
         padding: 0.5rem 1rem 0 1rem;
       "
     >
-      <a href="." style="font-size: 0.9rem; font-weight: 600; color: inherit; text-decoration: none"
-        >🤐 Zipview</a
+      <a
+        href="."
+        style="
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: inherit;
+          text-decoration: none;
+        "
+        >Vitest Viewer</a
       >
       <div style="flex: 1"></div>
       <div id="status" style="font-size: 0.8rem; color: #999; display: none">
         Status: <span id="status-msg"></span>
       </div>
       <a
-        href="https://github.com/hi-ogawa/zipview"
+        href="https://github.com/vitest-dev/viewer"
         style="font-size: 0.8rem; color: #999; text-decoration: none"
         target="_blank"
         rel="noopener"
@@ -82,7 +89,7 @@
     >
       or try an
       <a
-        href="?url=https://cdn.jsdelivr.net/gh/hi-ogawa/zipview@main/docs/assets/vitest-html-reporter.zip"
+        href="?url=https://cdn.jsdelivr.net/gh/vitest-dev/viewer@main/docs/assets/vitest-html-reporter.zip"
         style="color: #008039"
         >example</a
       >
