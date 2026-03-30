@@ -195,6 +195,7 @@
         $example.hidden = true;
         $viewer.hidden = false;
         $viewer.src = PREFIX;
+        $viewer.onload = () => setStatus(`Cached ${fileCount} files.`);
       }
 
       // Drag and drop
