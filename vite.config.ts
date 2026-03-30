@@ -4,4 +4,5 @@ export default defineConfig({
   staged: {
     "*": "vp fmt",
   },
+  fmt: {},
 });
