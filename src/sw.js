@@ -1,6 +1,9 @@
 const CACHE_NAME = "zipview-v1";
 const PREFIX = "/zipview/site/";
 
+// skipWaiting: activate immediately instead of waiting for old clients to close.
+// clients.claim: take control of existing tabs right away.
+// Together these ensure the new SW is serving before index.html writes to the cache.
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
 

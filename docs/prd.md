@@ -7,15 +7,19 @@
 - [x] chore: add example zip from vitest html artifact
 - [x] `?url=` param for public URLs (GitHub artifact download requires auth, but pre-signed Azure blob URLs and S3 buckets work)
 - [x] File picker button (not just drag-and-drop) — mobile/accessibility
-- [ ] refactor: rework code
-  - deduplicate fflate import (script tag on line 6 is dead weight, only the ES module import is needed)
-  - share constants (CACHE_NAME, PREFIX) between index.html and sw.js instead of duplicating
-  - move MIME map to sw.js (it's serving the files, not the main thread)
-  - add try/catch around unzipSync for corrupt/non-zip files
-  - consider async unzip for large zips (fflate has async `unzip`)
-  - SW scope may break under subpath hosting
-- [ ] "Load another zip" button — currently the drop zone hides permanently after first load, no way to swap without refresh
+- [x] refactor: remove dead fflate script tag, use single ESM import
+- [x] refactor: fix XSS in fetch error display (Preact escapes by default)
+- [x] refactor: parallelize cache.put() with Promise.all
+- [x] refactor: consider async unzip for large zips (fflate has async `unzip`)
+- [x] refactor: add try/catch around unzipSync for corrupt/non-zip files
+- [x] refactor: SW ready blocks event listeners — make non-blocking, show "registering…" status
+- [ ] refactor: share constants (CACHE_NAME, PREFIX) between index.html and sw.js
+- [ ] refactor: extract `<style>` block from index.html to style.css
+- [ ] refactor: subpath hosting — PREFIX is hardcoded to `/zipview/site/`; real fix derives it dynamically from location.pathname (also affects sw.js scope and startsWith check)
+- [x] setup e2e
+
+## Backlog
+
 - [ ] Persist last zip in IndexedDB so refresh doesn't lose state
-- [ ] Multi-zip / tabbed view — drop multiple zips, or auto-detect multiple dirs in one zip
-- [ ] Publish as `npx zipview`
-- [ ] Self-bootstrapping: embed SW in the static site output itself so the zip is directly openable
+- [ ] Provide CLI / API to package SPA into "index.html + sw.js" bundle
+- [ ] Integrate as Vitest html reporter two files mode

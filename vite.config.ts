@@ -2,7 +2,7 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   staged: {
-    "*": "vp fmt",
+    "*": "vp check --fix --no-lint",
   },
   fmt: {},
 });

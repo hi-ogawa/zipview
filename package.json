@@ -5,11 +5,13 @@
   "scripts": {
     "prepare": "vp config",
     "dev": " sirv ./src --dev --single",
-    "lint": "vp fmt",
-    "lint-check": "vp fmt --check"
+    "lint": "vp check --fix --no-lint",
+    "lint-check": "vp check --no-lint",
+    "test-e2e": "playwright test"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^24.12.0",
     "sirv-cli": "^3.0.1",
     "vite-plus": "latest"
   },
