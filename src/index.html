@@ -209,7 +209,10 @@
       function FetchError({ error }) {
         return h(
           "div",
-          { style: { textAlign: "center", fontSize: "0.85rem", color: "#c00", marginTop: "1rem" } },
+          {
+            "data-testid": "fetch-error",
+            style: { textAlign: "center", fontSize: "0.85rem", color: "#c00", marginTop: "1rem" },
+          },
           h("div", null, error.message),
           h(
             "div",
@@ -238,6 +241,7 @@
           }
           setFileCount(count);
           setStatusMsg(`Cached ${count} files. Loading...`);
+          setFetchError(null);
           setLoaded(true);
         }
 

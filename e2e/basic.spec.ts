@@ -14,6 +14,14 @@ test("file input", async ({ page }) => {
   await testHtmlReport(page);
 });
 
+test("fetch error clears on drop recovery", async ({ page }) => {
+  await page.goto("/?url=http://localhost:1/test.zip");
+  await expect(page.getByTestId("fetch-error")).toContainText("likely blocked by CORS");
+  await page.locator('input[type="file"]').setInputFiles("docs/assets/vitest-html-reporter.zip");
+  await expect(page.getByTestId("fetch-error")).not.toBeVisible();
+  await testHtmlReport(page);
+});
+
 async function testHtmlReport(page: Page) {
   await expect(page.getByTestId("status")).toContainText("Cached 7 files");
   const frame = page.frameLocator("iframe");
